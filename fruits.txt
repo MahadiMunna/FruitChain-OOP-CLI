@@ -1,0 +1,5 @@
+Mango,150,KG,Rajshahi,10,2024-10-10,2024-11-11
+Lichi,400,100pcs,Dinajpur,0,2024-10-10,2024-11-11
+Jack Fruit,80,1pcs,Tangail,0,2024-10-10,2024-11-11
+Coconut,120,1pcs,Tangail,0,2024-10-10,2024-11-11
+Guava,60,KG,Pirojpur,0,2024-10-10,2024-11-11

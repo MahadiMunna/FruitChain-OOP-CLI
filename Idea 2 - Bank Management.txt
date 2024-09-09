@@ -1,0 +1,106 @@
+Bank Management system using CLI
+
+1. User Interface:
+    Command-Line Interface (CLI):
+        - Users should interact with the system through a CLI.
+        - The interface should provide clear instructions and prompts to guide users through various operations.
+        - Implement menus for different functionalities (e.g., Create account, Delete account, Profile, Loan, transactions etc) according to user role.
+
+2. User Authentication and Roles:
+    Registration:
+        - Users should be able to register by providing register information (e.g., username, first name, last name, email, password etc)
+        - User can't register using same username that is already registered.
+        - Passwords should be stored securely (consider using hashing techniques).
+        - After successful registration automatically generated an account no will be provided to the user.
+    Login:
+        - Users should log in using their registered credentials.
+        - Implement a basic session mechanism to maintain user login status during the session.
+    Roles:
+        Admin: 
+            - Manage user accounts
+            - Can check bank balance
+            - Can turn on/off loan features
+            - Can see all the transactions
+        User:
+            - Can deposit
+            - Can withdraw
+            - Can check available balance
+            - can take loan
+            - Can see transaction history
+            - Can transfer balance from one account to another
+            - Can cancel order and can remove order from list
+
+3. Manage Users:(Admin)
+    Add a new user:
+        - Admin can add new user by providing user information.
+        - Required user information - username, first name, last name, email, gender, address, account type and password
+    Delete a user:
+        - Admin can delete a user.
+    Manage Admin:
+        - Admin can make a new admin from registered users
+        - Admin can remove admin
+
+4. Bankrupt system:(Admin)
+    - Admin can turn of withdrawal system if there is shortage of money in the bank.
+    - When it is off users won't be able to withdraw money and it will shown to the user with a clear message.
+
+5. Loan status: (Admin)
+    - Admin can turn on/off the loan status
+    - When loan is off users won't be able to take loan
+
+6. All transactions: (Admin)
+    - Admin can see all transactions of the bank
+
+7. User account: (User)
+    - User can check their account balance.
+    - User can deposit and withdraw from the bank.
+    - When a user will deposit money it will add to his account balance and as well bank balance. withdraw will subtract from both too.
+    - User can see only his accounts transaction history with time.
+    - User can take loan from the bank and it is not more than 3 times.
+    - User can send money to another account of the same bank and it will be transfer using account no.
+
+8. Profile: (Admin and User)
+    - Can update profile information from here
+    - Can change password using previous password
+
+9. Data Structures and Storage:
+    Data Models:
+        - Use classes to represent core entities like Bank , Account.
+        - Each class should include appropriate attributes and methods for the operations they need to perform.
+    Data Storage:
+        - Use SQLite for persistent storage of data (bank, account).
+        - Implement CRUD operations for all entities using SQL queries.
+        
+10. File Handling:
+    Export Data:
+        - Implement functionality to export transaction history to CSV files.
+        - It will be different according to user role.
+    Import Data:
+        - Read some user account information from a txt file.
+        - Validate the imported data to ensure it meets the system’s requirements.
+
+12. Error Handling:
+    Input Validation:
+        - Validate user inputs to prevent errors (e.g., ensure which kind of data type need where data is input by a user, if data is not given properly raise value error).
+    Exception Handling:
+        - Implement try-except blocks to handle unexpected errors, such as database connection issues or invalid file formats or invalid inputs.
+    User-Friendly Messages:
+        - Provide clear and helpful error messages to guide users when something goes wrong.
+
+13. Final Integration:
+    Modular Design:
+        - Organize the code into modules (e.g., user management, transfer money) for better maintainability.
+    Deployment:
+        - Provide instructions for deploying the system on a local machine.
+    User Documentation:
+        - Write a user manual explaining how to use the system, including screenshots or examples.
+
+Deliverables:
+    Source Code:
+        - Complete and well-documented Python scripts.
+    Database Schema:
+        - SQL scripts for setting up the necessary tables in the SQLite database.
+    Documentation:
+        - A comprehensive README file with setup instructions, usage guidelines and system architecture.
+    Demonstration:
+        - A video or presentation showcasing the main features and workflow of the Bank management system.

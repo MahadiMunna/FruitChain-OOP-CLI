@@ -1,0 +1,3 @@
+Customer Name,Billing Address,Ordered Items,Payable Amount,Payment Method,Payment status,Order Status,Timestamp
+Mahadi Munna,"Thanapara, Tangail, Tangail, Tangail, 01778819445",Mangox2,270.0,Card,Paid,In Queue,2024-09-08 12:26:43.967908
+Mahadi Munna,"Jalalia, Vabki, Delduar, Tangail, 01778819445","Coconutx2, Jack Fruitx2",400.0,Cash on delivery,Pending,In Queue,2024-09-08 12:27:24.444571
