@@ -1,1 +1,123 @@
-# FruitChain-OOP-CLI
+# Fruit Chain - Fruit selling e-commerce using CLI
+
+1. User Interface:
+    Command-Line Interface (CLI):
+        - Users should interact with the system through a CLI.
+        - The interface should provide clear instructions and prompts to guide users through various operations.
+        - Implement menus for different functionalities (e.g., Add new fruit, Users management, Profile, Cart, Orders) according to user role
+
+2. User Authentication and Roles:
+    Registration:
+        - Users should be able to register by providing register information (e.g., username, first name, last name, email, password etc)
+        - User can't register using same username that is already registered.
+        - Passwords should be stored securely (consider using hashing techniques).
+    Login:
+        - Users should log in using their registered credentials.
+        - Implement a basic session mechanism to maintain user login status during
+        the session.
+    Roles:
+        Admin: 
+            - Manage fruit post
+            - Manage stocks
+            - Manage users
+            - Manage orders
+        User:
+            - Can see available fruits
+            - Can see fruits with discount
+            - Can add fruit in their cart
+            - can update cart
+            - Can make order from cart
+            - Can see order details
+            - Can cancel order and can remove order from list
+
+3. Fruit Management:(Admin)
+    Add New Fruit:
+        - Admins should be able to add new fruit post for sell.
+        - Required details: fruit name, price, unit, discount, origin, supply date, expiry date.
+    Update Fruit Information:
+        - Admins can update details of existing fruit post.
+    Delete Fruit Post:
+        - Admins can delete fruit post anytime.
+    Manage Stocks:
+        - Admin can make a fruit stock out.
+        - Admin can see stock out fruit list
+        - Admin can also make stock in
+
+4. Manage Users:(Admin)
+    Add a new user:
+        - Admin can add new user by providing user information.
+        - Required user information - username, first name, last name, email, gender, password
+    Delete a user:
+        - Admin can delete a user.
+    Manage Admin:
+        - Admin can make a new admin from registered users
+        - Admin can remove admin
+
+5. Manage orders:(Admin)
+    - Admin will be able to see user name who ordered, address, ordered items, total payable amount, payment method, payment status, order status and timestamp
+    - Admin can update order status and payment status
+    - Admin can remove order from order list
+
+6. View fruits: (User)
+    - user can see available fruits
+    - User can see fruits in details
+    - There will be a dedicated menu option to see flash sale fruits (fruits with discount)
+    - User can add fruit to cart for order
+
+7. Cart: (User)
+    - User can see items in cart which are added by them
+    - User can update their cart (e.g., Remove item from cart, change quantity of fruits)
+    - Total payable amount should be visible in the cart section
+    - Order process should be start from here
+
+8. Order: (User)
+    - User can order items which are in their cart
+    - They will have to provide billing address
+    - Required information for billing address - Village, Post, Police station, District, phone number
+    - There will be some payment method (e.g., card, mobile banking, cash on delivery)
+    - Only in cash on delivery payment status will show unpaid, rest will show paid.
+
+9. Profile: (Admin and User)
+    - Can update profile information from here
+    - Can change password using previous password
+
+10. Data Structures and Storage:
+    Data Models:
+        - Use classes to represent core entities like User , Fruit , Cart , Order and Billing Address.
+        - Each class should include appropriate attributes and methods for the operations they need to perform.
+    Data Storage:
+        - Use SQLite for persistent storage of data (users, fruits, cart, orders).
+        - Implement CRUD operations for all entities using SQL queries.
+        
+11. File Handling:
+    Export Data:
+        - Implement functionality for admin to export orders information to CSV files.
+    Import Data:
+        - Read fruit posts from a txt file where some fruits information is available.
+        - Validate the imported data to ensure it meets the system’s requirements.
+
+12. Error Handling:
+    Input Validation:
+        - Validate user inputs to prevent errors (e.g., ensure which kind of data type need where data is input by a user, if data is not given properly raise value error).
+    Exception Handling:
+        - Implement try-except blocks to handle unexpected errors, such as database connection issues or invalid file formats or invalid inputs.
+    User-Friendly Messages:
+        - Provide clear and helpful error messages to guide users when something goes wrong.
+
+13. Final Integration:
+    Modular Design:
+        - Organize the code into modules (e.g., authentication module, fruit management module) for better maintainability.
+    Deployment:
+        - Provide instructions for deploying the system on a local machine.
+    User Documentation:
+        - Write a user manual explaining how to use the system, including screenshots or examples.
+
+Deliverables:
+    Source Code:
+        - Complete and well-documented Python scripts.
+    Database Schema:
+        - SQL scripts for setting up the necessary tables in the SQLite database.
+    Documentation:
+        - A comprehensive README file with setup instructions, usage guidelines and system architecture.
+    Demonstration:
+        - A video or presentation showcasing the main features and workflow of the Fruit e-commerce System.
