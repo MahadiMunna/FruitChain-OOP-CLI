@@ -1,4 +1,5 @@
 from constants import success, error, make_date, get_int, get_float, get_date
+from db import conn, cursor, create_fruit, update_fruit_db, make_stock_out_db, make_stock_in_db
 
 class Fruit(object):
 
@@ -12,7 +13,6 @@ class Fruit(object):
         self.supply_date = supply_date
         self.expiry_date = expiry_date
         self.stock_out = False
-        Fruit.fruit_list.append(self)
 
     def make_stock_out(self):
         self.stock_out = True
@@ -25,6 +25,28 @@ class Fruit(object):
             return float((self.price - (self.price * self.discount)/100))
         else:
             return float(self.price)
+        
+def insert_fruits_from_txt():
+    with open('fruits.txt', 'r') as fruits:
+        for line in fruits:
+            fruit_name, price, unit, origin, discount, supply_date, expiry_date = tuple(line.strip('\n').split(','))
+            price = float(price)
+            discount = float(discount)
+            supply_date = make_date(supply_date)
+            expiry_date = make_date(expiry_date)
+            new_fruit = Fruit(fruit_name, price, unit, origin, discount, supply_date, expiry_date)
+            create_fruit(new_fruit)
+
+# insert_fruits_from_txt()
+
+def load_fruits():
+    with conn:
+        cursor.execute("SELECT * FROM fruits")
+        fruits = cursor.fetchall()
+        for fruit in fruits:
+            fruit_name, price, unit, origin, discount, supply_date, expiry_date, stock_out = fruit
+            new_fruit = Fruit(fruit_name, price, unit, origin, discount, supply_date, expiry_date)
+            Fruit.fruit_list.append(new_fruit)
 
 def add_fruit():
     fruit_name = input("Fruit name: ")
@@ -39,6 +61,8 @@ def add_fruit():
     print("Expiry date (YYYY-MM-DD):", end=" ")
     expiry_date = get_date()
     fruit = Fruit(fruit_name, price, unit, origin, discount, supply_date, expiry_date)
+    Fruit.fruit_list.append(fruit)
+    create_fruit(fruit)
     success(f'{fruit.fruit_name} added successfully!')
 
 
@@ -117,7 +141,6 @@ def update_fruit():
         print(f'\nFruit Details-\nName: {fruit.fruit_name}\nPrice: {fruit.price:.2f} per {fruit.unit}\nDiscount: {fruit.discount:.2f}\nOrigin: {fruit.origin}\nSupply Date: {fruit.supply_date}\nExpiry Date: {fruit.expiry_date}\n\n')
 
         print('Enter new details- \n')
-        fruit.fruit_name = input("Fruit name: ")
         print("Price per unit:", end=" ")
         fruit.price = get_float()
         fruit.unit = input("Unit (kg/gm/dozen/pcs/etc.): ")
@@ -128,6 +151,7 @@ def update_fruit():
         fruit.supply_date = get_date()
         print("Expiry date (YYYY-MM-DD):", end=" ")
         fruit.expiry_date = get_date()
+        update_fruit_db(fruit)
         success(f'Fruit updated successfully!')
     
 
@@ -144,6 +168,7 @@ def manage_stock():
             return
         fruit = Fruit.fruit_list[no-1]
         fruit.make_stock_out()
+        make_stock_out_db(fruit)
         success(f'{fruit.fruit_name} is now unavailable')
     
     elif option == 2:
@@ -158,6 +183,7 @@ def manage_stock():
                 return
             fruit = Fruit.fruit_list[no-1]
             fruit.make_stock_in()
+            make_stock_in_db(fruit)
             success(f'{fruit.fruit_name} is now available')
         elif option == 0:
             return

@@ -1,6 +1,7 @@
 from constants import calculate_total_price, success, error, get_int
 from fruit import Fruit
 from orders import place_order
+from db import conn, cursor, add_to_cart_db, remove_from_cart_db, update_cart_db
 
 class CartItem(object):
 
@@ -8,6 +9,22 @@ class CartItem(object):
         self.item = item
         self.quantity = quantity
         self.total_price = calculate_total_price(item, quantity)
+
+def load_cart_items(user):
+    with conn:
+        cursor.execute("SELECT * FROM cart WHERE user = :user", {"user":user.user_name})
+        items = cursor.fetchall()
+        if items is not None:
+            for item in items:
+                fruit_name, quantity, total_price, user_name = item
+                i = 0
+                for index, fruit in enumerate(Fruit.fruit_list):
+                    if fruit.fruit_name == fruit_name:
+                        i = index
+                        break
+                fruit = Fruit.fruit_list[i]
+                cart_item = CartItem(fruit, quantity)
+                user.cart.append(cart_item)
 
 def add_to_cart(current_user):
     while True:
@@ -35,7 +52,16 @@ def add_to_cart(current_user):
             if option == 1:
                 print('Enter quantity: ')
                 quantity = get_int()
+                for index, cart_item in enumerate(current_user.cart):
+                    if fruit == cart_item.item:
+                        cart = current_user.cart[index]
+                        cart.quantity += quantity
+                        cart.total_price = calculate_total_price(cart.item, cart.quantity)
+                        update_cart_db(current_user, cart_item)
+                        success(f'{fruit.fruit_name} quantity updated successfully!')
+                        return
                 cart_item = CartItem(fruit, quantity)
+                add_to_cart_db(current_user,cart_item)
                 current_user.cart.append(cart_item)
                 success(f'{fruit.fruit_name} added to cart successfully!')
             elif option == 0:
@@ -51,7 +77,16 @@ def add_to_cart(current_user):
             fruit = Fruit.fruit_list[no-1]
             print('Enter quantity: ')
             quantity = get_int()
+            for index, cart_item in enumerate(current_user.cart):
+                    if fruit == cart_item.item:
+                        cart = current_user.cart[index]
+                        cart.quantity += quantity
+                        cart.total_price = calculate_total_price(cart.item, cart.quantity)
+                        update_cart_db(current_user, cart_item)
+                        success(f'{fruit.fruit_name} quantity updated successfully!')
+                        return
             cart_item = CartItem(fruit, quantity)
+            add_to_cart_db(current_user,cart_item)
             current_user.cart.append(cart_item)           
             success(f'{fruit.fruit_name} added to cart successfully!')
             
@@ -89,10 +124,12 @@ def view_cart(current_user):
         quantity = get_int()
         if quantity == 0:
             current_user.cart.remove(item)
+            remove_from_cart_db(current_user, item)
             success(f'{item.item.fruit_name} removed from cart successfully!')
         else:
             item.quantity = quantity
             item.total_price = calculate_total_price(item.item, item.quantity)
+            update_cart_db(current_user, item)
             success(f'{item.item.fruit_name}\'s quantity updated successfully!')
             
     elif option == 2:

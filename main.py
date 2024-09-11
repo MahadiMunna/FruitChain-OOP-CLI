@@ -1,25 +1,14 @@
 import time
-from constants import banner, error, make_date, get_int
-from users import User, admin_user, customer_user
+from constants import banner, error, get_int
+from users import load_users, admin_user, customer_user
 from auth import login, register
-from fruit import Fruit
+from fruit import load_fruits
+from cart import load_cart_items
 
-admin = User('admin','Admin','Shaheb Mohodoy','admin@gmail.com', 'Male','admin')
-munna = User('munna','Mahadi','Munna','munna@gmail.com', 'Male','munna')
-admin.make_admin()
-current_user = None
-def load_data():
-    with open('fruits.txt', 'r') as fruits:
-        for line in fruits:
-            fruit_name, price, unit, origin, discount, supply_date, expiry_date = tuple(line.strip('\n').split(','))
-            price = float(price)
-            discount = float(discount)
-            supply_date = make_date(supply_date)
-            expiry_date = make_date(expiry_date)
-            Fruit(fruit_name, price, unit, origin, discount, supply_date, expiry_date)
-            
-load_data()
+load_fruits()
+load_users()
 banner('Welcome to FruitChain')
+current_user = None           
 while True:
     if current_user:
         banner(f'Hello, {current_user.fullname}')
@@ -52,6 +41,7 @@ while True:
                     error("Ops! You have chosen an invalid option!")
     
         else:
+            load_cart_items(current_user)
             while True:
                 print("Enter your option:\n1. See available fruits\n2. Flash-sale\n3. Cart\n4. Orders\n5. Profile\n6. Logout")    
                 op = get_int()

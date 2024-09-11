@@ -1,5 +1,7 @@
 from users import User
 from constants import generate_hash, error, success
+from db import conn,cursor,create_user
+
 
 def username_validator(username):
     if username in User.username_list:
@@ -8,17 +10,24 @@ def username_validator(username):
         return True
     
 def login():
-    user_name = input("Enter your username: ")
+    username = input("Enter your username: ")
     input_pass = input("Enter your password: ")
     password = generate_hash(input_pass)
-    for user in User.user_list:
-        if user.user_name == user_name and user.get_password() == password:
-            return user
-    else:
-        
-        error("Invalid credentials. Try again.")
-        
-        return None
+    with conn:
+        cursor.execute("SELECT * FROM users WHERE user_name = :user_name AND password = :password", {"user_name": username, "password": password})
+        user = cursor.fetchone()
+        if user != None:
+            user_name, first_name, last_name, email, gender, password, admin = user
+            c_user = User(user_name, first_name, last_name, email, gender, password)
+            if admin:
+                c_user.make_admin()
+            return c_user
+    # for user in User.user_list:
+    #     if user.user_name == user_name and user.get_password() == password:
+    #         return user
+        else:
+            error("Invalid credentials. Try again.")
+            return None
 
 def register():
     print("Please, provide following information-")
@@ -38,4 +47,8 @@ def register():
         return None
     else:
         success("Account created successfully!")
-        return User(user_name, first_name, last_name, email, gender, password)
+        user = User(user_name, first_name, last_name, email, gender, password)
+        User.username_list.append(user_name)
+        User.user_list.append(user)
+        create_user(user)
+        return user

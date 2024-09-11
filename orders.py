@@ -1,6 +1,7 @@
 import csv
 from datetime import datetime
 from constants import generate_hash, error, success, get_int
+from db import remove_from_cart_db
 
 class Order(object):
 
@@ -71,6 +72,8 @@ def place_order(current_user):
     my_order = Order(current_user, billing_address, items, total_amount, payment_method, payment_status)
     my_order.set_order_status("In Queue")
     current_user.orders.append(my_order)
+    for cart in current_user.cart:
+        remove_from_cart_db(current_user, cart)
     current_user.cart = []
     success("Order placed successfully!")
     
