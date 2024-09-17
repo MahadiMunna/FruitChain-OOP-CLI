@@ -1,7 +1,7 @@
 from constants import generate_hash, error, success, get_int
-from fruit import Fruit, add_fruit, view_fruits, update_fruit, manage_stock, user_fruits_view, flash_sale
+from fruit import add_fruit, view_fruits, update_fruit, manage_stock, user_fruits_view, flash_sale
 from cart import add_to_cart, view_cart
-from orders import view_orders, manage_orders
+from orders import Order, manage_orders, view_orders
 from db import conn, cursor, create_user, update_user, update_password, delete_user, make_admin_user, remove_admin_user
 
 class User(object):
@@ -91,6 +91,32 @@ def load_users():
                 new_user.make_admin()
             User.username_list.append(user_name)
             User.user_list.append(new_user)
+
+def find_user(user_name):
+    i = 0
+    for index,user in enumerate(User.user_list):
+        if user.user_name == user_name:
+            i = index
+            break
+    user = User.user_list[i]
+    return user
+
+def load_orders():
+    import users
+    with conn:
+        cursor.execute("SELECT * FROM orders")
+        orders = cursor.fetchall()
+        for order in orders:
+            user_name, billing_address, items, total_amount, payment_method, payment_status, order_status, timestamp, order_id, removed = order
+            user = users.find_user(user_name)
+            order = Order(user, billing_address, items, total_amount, payment_method, payment_status)
+            order.order_status = order_status
+            order.timestamp = timestamp
+            order.order_id = order_id
+            if removed == 1:
+                order.removed = True
+            
+            Order.orders_list.append(order)
 
 def profile(current_user):
     print("\nWelcome to profile, " + current_user.fullname)

@@ -102,6 +102,10 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS billing_address(
                FOREIGN KEY (user) REFERENCES users(user_name)
                )""")
 
+def create_address(user, address):
+    with conn:
+        cursor.execute("INSERT INTO billing_address VALUES(:village, :post, :police_station, :district, :phone, :user)", {'village': address.village, 'post':address.post, 'police_station': address.police_station, 'district': address.district, 'phone': address.phone, 'user': user})
+
 cursor.execute("""CREATE TABLE IF NOT EXISTS orders(
                user TEXT,
                billing_address TEXT,
@@ -112,10 +116,34 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS orders(
                order_status TEXT,
                timestamp TEXT,
                order_id TEXT,
+               removed BOOL,
                FOREIGN KEY(user) REFERENCES users(user_name),
-               FOREIGN KEY(billing_address) REFERENCES billing_address(village),
                FOREIGN KEY(items) REFERENCES cart(item)
                )""")
+
+def create_order(order):
+    with conn:
+        cursor.execute("INSERT INTO orders VALUES(:user, :billing_address, :items, :total_amount, :payment_method, :payment_status, :order_status, :timestamp, :order_id, :removed)",{"user": order.user.user_name, "billing_address": order.billing_address.__str__(), "items":order.items, "total_amount": order.total_amount, "payment_method": order.payment_method, "payment_status": order.payment_status, "order_status": order.order_status, "timestamp": order.timestamp, "order_id": order.order_id, "removed": order.removed})
+
+def update_order_status_db(order):
+    with conn:
+        cursor.execute("UPDATE orders SET order_status = :status WHERE order_id = :order_id",{"status": order.order_status, "order_id": order.order_id})
+
+def update_payment_status_db(order):
+    with conn:
+        cursor.execute("UPDATE orders SET payment_status = :status WHERE order_id = :order_id",{"status": order.order_status, "order_id": order.order_id})
+
+def cancel_order_db(order):
+    with conn:
+        cursor.execute("UPDATE orders SET order_status = :status WHERE order_id = :order_id", {"status": order.status, "order_id": order.order_id})
+
+def remove_order_db(order):
+    with conn:
+        cursor.execute("DELETE FROM orders WHERE order_id = :order_id", {"order_id": order.order_id})
+
+def remove_order_view_for_users(order):
+    with conn:
+        cursor.execute("UPDATE orders SET removed = 1 WHERE order_id = :order_id", {"order_id": order.order_id})
 
 conn.commit()
 

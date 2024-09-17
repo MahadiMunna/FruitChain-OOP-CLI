@@ -1,14 +1,18 @@
 import time
 from constants import banner, error, get_int
-from users import load_users, admin_user, customer_user
+from users import load_users, admin_user, customer_user, load_orders
 from auth import login, register
 from fruit import load_fruits
 from cart import load_cart_items
+from orders import load_orders_for_user
 
 load_fruits()
 load_users()
+load_orders()
+
 banner('Welcome to FruitChain')
 current_user = None           
+
 while True:
     if current_user:
         banner(f'Hello, {current_user.fullname}')
@@ -42,6 +46,7 @@ while True:
     
         else:
             load_cart_items(current_user)
+            load_orders_for_user(current_user)
             while True:
                 print("Enter your option:\n1. See available fruits\n2. Flash-sale\n3. Cart\n4. Orders\n5. Profile\n6. Logout")    
                 op = get_int()
